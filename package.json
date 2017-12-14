@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ShaharZuberi/gender-classifier-client#readme",
   "dependencies": {
+    "antd": "^3.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "webpack": "^3.10.0",
