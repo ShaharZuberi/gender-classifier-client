@@ -4,40 +4,62 @@
 import React from 'react';
 import { Table, Icon, Divider } from 'antd';
 
-const data = [{
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-}, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-}, {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-}];
+// const data = [{
+//     key: '1',
+//     name: 'John Brown',
+//     age: 32,
+//     address: 'New York No. 1 Lake Park',
+// }, {
+//     key: '2',
+//     name: 'Jim Green',
+//     age: 42,
+//     address: 'London No. 1 Lake Park',
+// }];
 
 const columns = [{
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: text => <a href="#">{text}</a>,
+    // render: text => <a href="#">{text}</a>,
 }, {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-}, {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: 'Learning rate',
+    dataIndex: 'learningRate',
+    key: 'learningRate',
+},{
+    title: 'Iterations',
+    dataIndex: 'iterations',
+    key: 'iterations',
+},{
+    title: 'Signal length',
+    dataIndex: 'signalLength',
+    key: 'signalLength',
+},{
+    title: 'Signal sample buffer',
+    dataIndex: 'signalSampleBuffer',
+    key: 'signalSampleBuffer',
+},{
+    title: 'mfcc/wav',
+    dataIndex: 'processType',
+    key: 'processType',
 }]
+
+function RowStructure(networkJSON) {
+    return {
+        rowKey:networkJSON[0],
+        name:networkJSON[1],
+        learningRate:networkJSON[2],
+        iterations:networkJSON[3],
+        signalLength:networkJSON[4],
+        signalSampleBuffer:networkJSON[5],
+        processType:networkJSON[6]
+    }
+}
 
 export default class Grid extends React.Component {
     render(){
+        var receivedJSON = [[4, "test network", 0.01, 100, 320, 20, "mfcc"]];
+        var data = receivedJSON.map(RowStructure);
+
         return (
             <Table columns={columns} dataSource={data} />
         )
