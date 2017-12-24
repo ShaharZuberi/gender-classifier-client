@@ -2,31 +2,62 @@
  * Created by shahar on 12/11/2017.
  */
 import React from 'react';
-import { Tabs } from 'antd';
+import {Tabs} from 'antd';
 import Grid from './Grid.js'
 const TabPane = Tabs.TabPane;
-import { Upload, message, Button, Icon } from 'antd';
+
+var SERVER_URL = 'http://192.168.56.101:42426'
 
 function callback(key) {
-    console.log(key);
+    console.log("callback: " + key);
+}
+function httpGetSync(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false); // false for synchronous request
+    xmlHttp.send(null);
+    return xmlHttp.responseText
+}
+
+function mapToSelect(option){
+    return (
+        <option value={option}>{option}</option>
+    )
 }
 
 export default class TABS extends React.Component {
-    render(){
+
+    constructor(){
+        super();
+        this.state = {
+            trainedNetworks: []
+        }
+        this.state.trainedNetworks = JSON.parse(httpGetSync(SERVER_URL+'/getTrainedNetworks'))
+    }
+
+    networksToSelectFrom(){
+        return (
+            <select name="networkSelected">
+                {this.state.trainedNetworks.map(x=>mapToSelect(x[1]))}
+            </select>
+        )
+    }
+
+    render() {
         return (
             <Tabs
                 onChange={callback}
-                defaultActiveKey="2"
+                defaultActiveKey="1"
             >
                 <TabPane tab="Test" key="1">
-                    <Upload>
-                        <Button>
-                            <Icon type="upload" /> Upload file for classification
-                        </Button>
-                    </Upload>
+                    <form target="targetFrame" action ={SERVER_URL+'/uploader'} method = "POST" enctype = "multipart/form-data">
+                        <input type = "file" name = "file" />
+                        {this.networksToSelectFrom()}
+                        <input type = "submit"/>
+                    </form>
+                    <iframe name="targetFrame" style={{margin:0,padding: 0,border:'none', width:'100px', height:'80px'}}/>
                 </TabPane>
                 <TabPane tab="Train" key="2">
-                    <Grid/>
+                    <Grid trainedNetworks={this.state.trainedNetworks}/>
                 </TabPane>
             </Tabs>
         )

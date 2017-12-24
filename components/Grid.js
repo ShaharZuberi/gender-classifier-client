@@ -57,8 +57,8 @@ function RowStructure(networkJSON) {
 
 export default class Grid extends React.Component {
     render(){
-        var receivedJSON = [[4, "test network", 0.01, 100, 320, 20, "mfcc"]];
-        var data = receivedJSON.map(RowStructure);
+        // var receivedJSON = [[4, "test network", 0.01, 100, 320, 20, "mfcc"]];
+        var data = this.props.trainedNetworks.map(RowStructure);
 
         return (
             <Table columns={columns} dataSource={data} />
