@@ -5,18 +5,10 @@ import React from 'react';
 import {Tabs} from 'antd';
 import Grid from './Grid.js'
 const TabPane = Tabs.TabPane;
-
-var SERVER_URL = 'http://192.168.56.101:42426'
-
-function callback(key) {
-    console.log("callback: " + key);
-}
-function httpGetSync(theUrl) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", theUrl, false); // false for synchronous request
-    xmlHttp.send(null);
-    return xmlHttp.responseText
-}
+import * as utils from '../utilities.js'
+import { Form, Button } from 'antd';
+const FormItem = Form.Item;
+import AdvancedSearchForm from './AdvancedSearchForm.js'
 
 function mapToSelect(option){
     return (
@@ -24,14 +16,16 @@ function mapToSelect(option){
     )
 }
 
-export default class TABS extends React.Component {
+const WrappedAdvancedSearchForm = Form.create()(AdvancedSearchForm)
 
+export default class TABS extends React.Component {
     constructor(){
         super();
         this.state = {
             trainedNetworks: []
         }
-        this.state.trainedNetworks = JSON.parse(httpGetSync(SERVER_URL+'/getTrainedNetworks'))
+        this.state.trainedNetworks = JSON.parse(utils.httpGetSync(utils.SERVER_URL+'/getTrainedNetworks'))
+        this.updateTrainedNetworks = this.updateTrainedNetworks.bind(this);
     }
 
     networksToSelectFrom(){
@@ -42,37 +36,32 @@ export default class TABS extends React.Component {
         )
     }
 
+    updateTrainedNetworks(){
+        var newNetworks = JSON.parse(utils.httpGetSync(utils.SERVER_URL+'/getTrainedNetworks'));
+        this.setState({
+            trainedNetworks : newNetworks
+        })
+    }
+
     render() {
         return (
             <Tabs
-                onChange={callback}
                 defaultActiveKey="1"
             >
                 <TabPane tab="Test" key="1">
-                    <form target="targetFrame" action ={SERVER_URL+'/uploader'} method = "POST" enctype = "multipart/form-data">
+                    <form target="targetFrame" action ={utils.SERVER_URL+'/uploader'} method = "POST" enctype = "multipart/form-data">
                         <input type = "file" name = "file" />
                         {this.networksToSelectFrom()}
                         <input type = "submit"/>
                     </form>
-                    <iframe name="targetFrame" style={{margin:0,padding: 0,border:'none', width:'100px', height:'80px'}}/>
+                    <iframe name="targetFrame" style={{margin:0,padding: 0,border:'none', width:'100%', height:'80px'}}/>
                 </TabPane>
                 <TabPane tab="Train" key="2">
-                    <Grid trainedNetworks={this.state.trainedNetworks}/>
+                    <Button type="primary" shape="circle" icon="reload" onClick={()=>this.updateTrainedNetworks()}/>
+                    <Grid gridData={this.state.trainedNetworks}/>
+                    <WrappedAdvancedSearchForm/>
                 </TabPane>
             </Tabs>
         )
     }
 }
-
-//         style={{direction:"rtl"}}
-//         icon={<FormUploadIcon/>}
-//         label='Upload a file for classification'
-//         onClick={()=>console.log('clicked')}
-//         href='#'
-//         primary={false}
-//         secondary={false}
-//         accent={false}
-//         critical={false}
-//         plain={false}
-// />
-// <input id='uploadInput' type='button' hidden={true} />

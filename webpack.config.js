@@ -8,7 +8,8 @@ var config = {
       inline: true,
       port: 8080
    },
-   module: {
+    devtool:'source-map',
+    module: {
       loaders: [
          {
             test: /\.jsx?$/,
