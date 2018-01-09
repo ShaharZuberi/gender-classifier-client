@@ -3,6 +3,8 @@
  */
 import React from 'react';
 import { Table, Icon, Divider, Popconfirm } from 'antd';
+import * as utils from '../utilities.js'
+import { Button } from 'antd';
 
 const columns = [{
     title:'Network spec',
@@ -88,14 +90,35 @@ const columns = [{
                     key: 'femaleTestRecall'
             }]
         }]
+    }, {
+    title: 'Action',
+    dataIndex: 'Action',
+    key: 'Action'
     }]
 
 export default class Grid extends React.Component {
     constructor(){
         super();
+        this.deleteRequest = this.deleteRequest.bind(this);
+        this.refreshAfterDeleteRequest = this.refreshAfterDeleteRequest.bind(this);
         this.state = {
             editable: false,
+            lastlyDeleted: false
         }
+    }
+
+    deleteRequest(networnName){
+        utils.httpGetSync(utils.SERVER_URL+'/deleteNetwork?name='+networnName)
+        this.setState({
+            lastlyDeleted: true
+        })
+    }
+
+    refreshAfterDeleteRequest(){
+        this.props.refreshfunction();
+        this.setState({
+            lastlyDeleted:false
+        })
     }
 
     RowStructure(networkJSON) {
@@ -113,6 +136,16 @@ export default class Grid extends React.Component {
         structure.maleTestRecall=networkJSON[10]
         structure.femaleTestPrecision=networkJSON[11]
         structure.femaleTestRecall=networkJSON[12]
+        structure.Action=(
+            <Popconfirm title="Are you sure？" okText="Yes" cancelText="No" onConfirm={()=>this.deleteRequest(networkJSON[1])}>
+                {
+                    this.state.lastlyDeleted ?
+                        <Button type="primary" shape="circle" icon="reload" onClick={()=>this.refreshAfterDeleteRequest()}/>
+                    :
+                        <a href="#">Delete</a>
+                }
+            </Popconfirm>
+        )
 
         return structure
     }
