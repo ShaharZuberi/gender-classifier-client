@@ -58,7 +58,7 @@ export default class TABS extends React.Component {
                 </TabPane>
                 <TabPane tab="Train" key="2">
                     <Button type="primary" shape="circle" icon="reload" onClick={()=>this.updateTrainedNetworks()}/>
-                    <Grid gridData={this.state.trainedNetworks}/>
+                    <Grid gridData={this.state.trainedNetworks} refreshfunction={this.updateTrainedNetworks}/>
                     <WrappedAdvancedSearchForm/>
                 </TabPane>
             </Tabs>
