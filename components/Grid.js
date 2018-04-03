@@ -2,7 +2,7 @@
  * Created by shahar on 12/11/2017.
  */
 import React from 'react';
-import { Table, Icon, Divider, Popconfirm } from 'antd';
+import { Table, Popconfirm } from 'antd';
 import * as utils from '../utilities.js'
 import { Button } from 'antd';
 
@@ -157,16 +157,3 @@ export default class Grid extends React.Component {
         )
     }
 }
-
-//         style={{direction:"rtl"}}
-//         icon={<FormUploadIcon/>}
-//         label='Upload a file for classification'
-//         onClick={()=>console.log('clicked')}
-//         href='#'
-//         primary={false}
-//         secondary={false}
-//         accent={false}
-//         critical={false}
-//         plain={false}
-// />
-// <input id='uploadInput' type='button' hidden={true} />

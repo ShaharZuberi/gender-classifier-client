@@ -7,7 +7,6 @@ import Grid from './Grid.js'
 const TabPane = Tabs.TabPane;
 import * as utils from '../utilities.js'
 import { Form, Button } from 'antd';
-const FormItem = Form.Item;
 import AdvancedSearchForm from './AdvancedSearchForm.js'
 
 function mapToSelect(option){
